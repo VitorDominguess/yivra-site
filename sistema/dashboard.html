@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - YIVRA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ======================================
+           VARIÁVEIS E RESET (Mobile First)
+           ====================================== */
+        :root {
+            --background: #0A0F14;
+            --card: #111820;
+            --border: #272F3A;
+            --popover: #18202A;
+            --input: #111820;
+            --input-border: #272F3A;
+            --input-border-focus: #2563eb;
+            --text-primary: #EDEEF0;
+            --text-secondary: #A0AEC0;
+            --text-muted: #718096;
+            --text-on-accent: #FFFFFF;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --success: #00E676;
+            --danger: #FF1744;
+            --warning: #FFA000;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            width: 100%;
+        }
+
+        /* ======================================
+           TIPOGRAFIA MOBILE FIRST
+           ====================================== */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        h1 { font-size: 1.5rem; }
+        h2 { font-size: 1.25rem; }
+        h3 { font-size: 1.1rem; }
+        h4 { font-size: 1rem; }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ======================================
+           LAYOUT PRINCIPAL (Mobile First)
+           ====================================== */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* ======================================
+           HEADER MOBILE
+           ====================================== */
+        .mobile-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--popover);
+        }
+
+        /* ======================================
+           NAVEGAÇÃO MOBILE
+           ====================================== */
+        .mobile-nav {
+            display: none;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .nav-scroll {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            width: 100%;
+        }
+
+        .nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            background: var(--popover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: var(--text-on-accent);
+        }
+
+        /* ======================================
+           CONTEÚDO PRINCIPAL
+           ====================================== */
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .content-section {
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        /* ======================================
+           CARDS E COMPONENTES
+           ====================================== */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--text-on-accent);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ======================================
+           KPI CARDS (Mobile: 1 coluna)
+           ====================================== */
+        .kpi-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .kpi-card {
+            padding: 1.5rem;
+        }
+
+        .kpi-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .kpi-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* ======================================
+           AGENDA (Mobile Otimizado)
+           ====================================== */
+        .agenda-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .agenda-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            width: 100%;
+        }
+
+        .agenda-item:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .agenda-time {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            min-width: 50px;
+            flex-shrink: 0;
+        }
+
+        .agenda-details {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .agenda-details strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .agenda-details p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 0.25rem 0 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .agenda-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-completed {
+            color: var(--success);
+            background: rgba(0, 230, 118, 0.1);
+        }
+
+        .status-next {
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .status-scheduled {
+            color: var(--text-muted);
+            background: var(--popover);
+        }
+
+        .status-break {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ======================================
+           GRÁFICO MOBILE
+           ====================================== */
+        .chart-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            padding: 0 0.25rem;
+        }
+
+        .chart-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            height: 100%;
+            min-width: 0;
+        }
+
+        .chart-bar-wrapper {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .chart-bar {
+            width: 75%;
+            background: var(--primary);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: all 0.2s ease;
+            position: relative;
+            min-height: 4px;
+            max-width: 30px;
+        }
+
+        .chart-bar:hover {
+            filter: brightness(1.2);
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .chart-label {
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .chart-day.inactive .chart-bar {
+            background: var(--border);
+            opacity: 0.4;
+        }
+
+        .chart-day.inactive .chart-value {
+            color: var(--text-muted);
+        }
+
+        /* ======================================
+           CLIENTES RECENTES
+           ====================================== */
+        .client-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            width: 100%;
+        }
+
+        .client-item:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .client-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .client-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .client-info strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .client-info p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 0.1rem 0 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ======================================
+           DASHBOARD GRID
+           ====================================== */
+        .dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .main-column, .sidebar-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* ======================================
+           MEDIA QUERIES (Tablet + Desktop)
+           ====================================== */
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+
+            .dashboard-container {
+                flex-direction: row;
+            }
+
+            .mobile-header {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: none !important;
+            }
+
+            /* Sidebar Desktop */
+            .sidebar {
+                width: 240px;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+                background: var(--background);
+                border-right: 1px solid var(--border);
+                padding: 2rem 1.5rem;
+                flex-shrink: 0;
+                display: block !important;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-item {
+                justify-content: flex-start;
+            }
+
+            .main-content {
+                padding: 2rem;
+                flex: 1;
+            }
+
+            .kpi-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .dashboard-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 1.5rem;
+            }
+
+            .chart-container {
+                height: 180px;
+                gap: 0.6rem;
+                padding: 0;
+            }
+
+            .chart-bar {
+                max-width: none;
+            }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+            html {
+                font-size: 16px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .chart-container {
+                height: 200px;
+                gap: 0.8rem;
+            }
+
+            .card-header {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Telas muito pequenas (até 360px) */
+        @media (max-width: 360px) {
+            html {
+                font-size: 13px;
+            }
+
+            .main-content {
+                padding: 0.75rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .agenda-item {
+                gap: 0.5rem;
+            }
+
+            .chart-container {
+                height: 140px;
+                gap: 0.3rem;
+            }
+
+            .chart-value {
+                font-size: 0.65rem;
+                top: -20px;
+            }
+
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .card-header .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Prevenir overflow em telas muito pequenas */
+        @media (max-width: 320px) {
+            .agenda-item {
+                flex-wrap: wrap;
+            }
+            
+            .agenda-status {
+                margin-left: 50px;
+            }
+            
+            .chart-container {
+                gap: 0.2rem;
+            }
+            
+            .chart-value {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Mobile -->
+        <header class="mobile-header">
+            <div class="header-top">
+                <div class="logo">YI<span>VRA</span></div>
+                <button class="mobile-menu-btn" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navegação Mobile -->
+        <nav class="mobile-nav" id="mobileNav">
+            <div class="nav-scroll">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Agenda</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-wallet"></i>
+                    <span>Financeiro</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Sidebar Desktop (oculto no mobile) -->
+        <aside class="sidebar" style="display: none;">
+            <div class="logo">YI<span>VRA</span></div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Agenda</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-wallet"></i>
+                    <span>Financeiro</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Cabeçalho -->
+            <div class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="min-width: 0; flex: 1;">
+                            <h1>Bom dia, Vítor</h1>
+                            <p>Aqui está o resumo da sua barbearia hoje, 10 de Novembro</p>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span>Novo Agendamento</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPIs -->
+            <div class="content-section">
+                <div class="kpi-grid">
+                    <div class="card kpi-card">
+                        <div class="kpi-label">Agendamentos (Hoje)</div>
+                        <div class="kpi-value">8 / 12</div>
+                        <div class="kpi-details">66% de ocupação</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 66%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card kpi-card">
+                        <div class="kpi-label">Faturamento (Hoje)</div>
+                        <div class="kpi-value">R$ 425,00</div>
+                        <div class="kpi-details">+R$ 65,00 pendente</div>
+                    </div>
+                    
+                    <div class="card kpi-card">
+                        <div class="kpi-label">Novos Clientes (Mês)</div>
+                        <div class="kpi-value">14</div>
+                        <div class="kpi-details">Meta: 20 clientes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Coluna Principal -->
+                <div class="main-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-calendar-day"></i>
+                                Agenda de Hoje
+                            </h3>
+                        </div>
+                        <div class="agenda-list">
+                            <div class="agenda-item">
+                                <div class="agenda-time">09:00</div>
+                                <div class="agenda-details">
+                                    <strong>Vítor Domingues</strong>
+                                    <p>Corte de Cabelo (R$ 40)</p>
+                                </div>
+                                <span class="agenda-status status-completed">Concluído</span>
+                            </div>
+                            
+                            <div class="agenda-item">
+                                <div class="agenda-time">09:30</div>
+                                <div class="agenda-details">
+                                    <strong>Carlos Silva</strong>
+                                    <p>Barba (R$ 30)</p>
+                                </div>
+                                <span class="agenda-status status-completed">Concluído</span>
+                            </div>
+                            
+                            <div class="agenda-item">
+                                <div class="agenda-time">10:30</div>
+                                <div class="agenda-details">
+                                    <strong>Ana Lúcia</strong>
+                                    <p>Corte + Barba (R$ 65)</p>
+                                </div>
+                                <span class="agenda-status status-next">Próximo</span>
+                            </div>
+                            
+                            <div class="agenda-item">
+                                <div class="agenda-time">11:30</div>
+                                <div class="agenda-details">
+                                    <strong>Marcos Batista</strong>
+                                    <p>Corte de Cabelo (R$ 40)</p>
+                                </div>
+                                <span class="agenda-status status-scheduled">Agendado</span>
+                            </div>
+                            
+                            <div class="agenda-item">
+                                <div class="agenda-time">12:00</div>
+                                <div class="agenda-details">
+                                    <strong class="status-break">---- ALMOÇO ----</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="agenda-item">
+                                <div class="agenda-time">14:00</div>
+                                <div class="agenda-details">
+                                    <strong class="status-break">(Horário Vago)</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Lateral -->
+                <div class="sidebar-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Faturamento (Semana)
+                            </h3>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem;">
+                            6 de nov. - 13 de nov.
+                        </p>
+                        
+                        <div class="chart-container">
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 40%">
+                                        <span class="chart-value">R$ 180</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Seg</div>
+                            </div>
+                            
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 55%">
+                                        <span class="chart-value">R$ 250</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Ter</div>
+                            </div>
+                            
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 33%">
+                                        <span class="chart-value">R$ 150</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Qua</div>
+                            </div>
+                            
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 70%">
+                                        <span class="chart-value">R$ 320</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Qui</div>
+                            </div>
+                            
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 100%">
+                                        <span class="chart-value">R$ 450</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Sex</div>
+                            </div>
+                            
+                            <div class="chart-day">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 57%">
+                                        <span class="chart-value">R$ 260</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Sáb</div>
+                            </div>
+                            
+                            <div class="chart-day inactive">
+                                <div class="chart-bar-wrapper">
+                                    <div class="chart-bar" style="height: 5%">
+                                        <span class="chart-value">R$ 0</span>
+                                    </div>
+                                </div>
+                                <div class="chart-label">Dom</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-users"></i>
+                                Clientes Recentes
+                            </h3>
+                        </div>
+                        <div class="client-list">
+                            <div class="client-item">
+                                <div class="client-avatar">AL</div>
+                                <div class="client-info">
+                                    <strong>Ana Lúcia</strong>
+                                    <p>Última visita: 10/11</p>
+                                </div>
+                            </div>
+                            
+                            <div class="client-item">
+                                <div class="client-avatar">VD</div>
+                                <div class="client-info">
+                                    <strong>Vítor Domingues</strong>
+                                    <p>Última visita: 10/11</p>
+                                </div>
+                            </div>
+                            
+                            <div class="client-item">
+                                <div class="client-avatar">BM</div>
+                                <div class="client-info">
+                                    <strong>Bruno Marques</strong>
+                                    <p>Última visita: 08/11</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Menu mobile toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileNav = document.getElementById('mobileNav');
+            const sidebar = document.querySelector('.sidebar');
+            
+            // Verifica se é desktop (768px+)
+            function checkScreenSize() {
+                if (window.innerWidth >= 768) {
+                    // Desktop: mostra sidebar, esconde menu mobile
+                    sidebar.style.display = 'block';
+                    mobileNav.style.display = 'none';
+                } else {
+                    // Mobile: esconde sidebar, gerencia menu mobile
+                    sidebar.style.display = 'none';
+                    mobileNav.style.display = 'none';
+                }
+            }
+            
+            // Toggle menu mobile
+            menuToggle.addEventListener('click', function() {
+                mobileNav.classList.toggle('active');
+            });
+            
+            // Fecha menu ao clicar em um link (mobile)
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        mobileNav.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Verifica tamanho da tela ao carregar e redimensionar
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
+            
+            // Interatividade do gráfico
+            document.querySelectorAll('.chart-bar').forEach(bar => {
+                bar.addEventListener('mouseenter', function() {
+                    this.style.filter = 'brightness(1.3)';
+                });
+                
+                bar.addEventListener('mouseleave', function() {
+                    this.style.filter = 'brightness(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

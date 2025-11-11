@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar - Barbearia Ágil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>*
+        /* Reset e configurações gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* ======================================
+               PALETA DE CORES (Base)
+               ====================================== */
+            --primary: #2563eb;       /* Azul Cobalto. Vibrante, confiável, tech. */
+            --primary-hover: #1d4ed8;  /* Versão mais escura para hover */
+
+            --success: #00E676;       /* Verde "neon" claro */
+            --danger: #FF1744;        /* Vermelho "neon" claro */
+            --warning: #FFA000;      /* Laranja vibrante */
+
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+
+            /* ======================================
+               DEFINIÇÃO DOS TEMAS (Dark & Light)
+               ====================================== */
+            
+            /* TEMA ESCURO (Padrão) */
+            --background: #0A0F14;
+            --card: #111820;
+            --border: #272F3A;
+            --popover: #18202A;
+            --input: #111820;
+            --input-border: #272F3A;
+            --text-primary: #EDEEF0;
+            --text-secondary: #A0AEC0;
+            --text-muted: #718096;
+            --text-on-accent: #FFFFFF;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+            --shadow: 0 0 15px 0 rgba(37, 99, 235, 0.1);
+            --shadow-lg: 0 0 30px 0 rgba(37, 99, 235, 0.15);
+        }
+
+        /* TEMA CLARO (Para esta página) */
+        .light-theme {
+            --background: #f8fafc;    /* Cinza bem claro */
+            --card: #FFFFFF;          /* Branco */
+            --border: #e2e8f0;        /* Borda cinza clara */
+            --popover: #FFFFFF;
+            --input: #f8fafc;
+            --input-border: #cbd5e1;
+            --text-primary: #0f172a;  /* Quase preto */
+            --text-secondary: #64748b;/* Cinza médio */
+            --text-muted: #94a3b8;    /* Cinza mais claro */
+            --text-on-accent: #FFFFFF;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ======================================
+           ESTILOS GERAIS
+           ====================================== */
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover { color: var(--accent-hover); }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.85rem 1.75rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text-on-accent);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--card);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .text-center { text-align: center; }
+        .text-primary { color: var(--accent); }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 2rem; }
+
+        /* ======================================
+           ANIMAÇÕES (MELHORIA)
+           ====================================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* ======================================
+           LAYOUT DO AGENDAMENTO
+           ====================================== */
+        
+        .booking-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+            overflow-x: hidden;
+        }
+
+        .booking-header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--card); /* Fundo branco no header */
+            width: 100%;
+        }
+
+        .booking-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .logo span { color: var(--primary); }
+
+        .booking-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+            width: 100%;
+        }
+
+        .booking-card {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .booking-progress {
+            display: flex;
+            padding: 1.5rem 1.5rem 0;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .progress-step {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+        .progress-step.active { background: var(--primary); }
+
+        .booking-content {
+            padding: 2rem;
+            width: 100%;
+            overflow: hidden; /* Importante para animação */
+            position: relative;
+            /* Altura dinâmica baseada no conteúdo */
+        }
+
+        .step {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+        }
+        .step.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out; /* Aplica animação */
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .step-subtitle {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* ======================================
+           COMPONENTES DO FORMULÁRIO
+           ====================================== */
+
+        /* Erro (MELHORIA) */
+        .error-message {
+            background: var(--danger);
+            color: #FFF;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none; /* Oculto por padrão */
+            animation: fadeIn 0.3s ease;
+        }
+        .error-message.active {
+            display: block;
+        }
+
+
+        /* Serviços */
+        .services-grid {
+            display: grid;
+            gap: 1rem;
+            width: 100%;
+        }
+        .service-card {
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--background);
+            width: 100%;
+        }
+        .service-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .service-card.selected {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05); /* Fundo azul mais claro */
+            box-shadow: 0 0 0 1px var(--primary); /* Anel sutil */
+        }
+        .service-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        .service-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Profissionais */
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            width: 100%;
+        }
+        .professional-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 1rem;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+            width: 100%;
+            border: 1px solid transparent; /* Borda invisível para manter tamanho */
+        }
+        .professional-card:hover {
+            background: var(--background);
+        }
+        .professional-card.selected {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+        .professional-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            border: 3px solid var(--border); /* Borda da mesma cor */
+            transition: all 0.3s ease;
+            color: var(--text-secondary); /* Cor do ícone/letra */
+        }
+        .professional-card.selected .professional-avatar {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: var(--text-on-accent);
+        }
+        .professional-name {
+            font-weight: 500;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        .professional-card.selected .professional-name {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+
+        /* Calendário */
+        .calendar-container { margin-bottom: 1.5rem; width: 100%; }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+        .calendar-month {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .calendar-nav {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        .calendar-nav:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .calendar-day {
+            text-align: center;
+            padding: 0.75rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .calendar-date {
+            text-align: center;
+            padding: 0.75rem 0;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            width: 100%;
+        }
+        .calendar-date.available {
+            color: var(--text-primary);
+            background: var(--background);
+        }
+        .calendar-date.available:hover {
+            border-color: var(--primary);
+        }
+        .calendar-date.selected {
+            background: var(--primary);
+            color: var(--text-on-accent);
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+        .calendar-date.unavailable {
+            color: var(--text-muted);
+            background: var(--background);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Horários */
+        .times-container { margin-top: 1.5rem; width: 100%; }
+        .times-header {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.75rem;
+            width: 100%;
+        }
+        .time-slot {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--background);
+            width: 100%;
+        }
+        .time-slot:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .time-slot.selected {
+            background: var(--primary);
+            color: var(--text-on-accent);
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+        .time-slot.unavailable {
+            color: var(--text-muted);
+            background: var(--background);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Formulário */
+        .form-group { margin-bottom: 1.5rem; width: 100%; }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background: var(--input);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .form-input::placeholder { color: var(--text-muted); }
+
+        /* Confirmação */
+        .confirmation-details {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            width: 100%;
+            border: 1px solid var(--border);
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            width: 100%;
+        }
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .detail-label { color: var(--text-secondary); }
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--text-primary); /* Preto no verde */
+            font-size: 2rem;
+        }
+
+        /* Footer */
+        .booking-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+        .btn-full { flex: 1; }
+
+        /* ======================================
+           RESPONSIVIDADE
+           ====================================== */
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            
+            .booking-main {
+                padding: 1.5rem 0; /* Menos padding */
+                align-items: flex-start; /* Alinha no topo */
+            }
+
+            .booking-card {
+                margin: 0;
+                max-width: none;
+                border: none; /* Remove borda no mobile */
+                box-shadow: none; /* Remove sombra no mobile */
+                background: transparent; /* Fundo transparente */
+                border-radius: 0;
+            }
+            
+            .booking-content { padding: 1.5rem 0; }
+            .booking-footer {
+                padding: 1.5rem 0 0;
+                flex-direction: column-reverse; /* Botão principal em cima */
+            }
+
+            .professionals-grid { grid-template-columns: repeat(2, 1fr); }
+            .calendar-grid { gap: 0.25rem; }
+            .calendar-date { padding: 0.5rem 0; font-size: 0.8rem; }
+            .times-grid { grid-template-columns: repeat(3, 1fr); }
+            .step-title { font-size: 1.25rem; }
+            .professional-avatar { width: 60px; height: 60px; font-size: 1.25rem; }
+        }
+
+        @media (max-width: 480px) {
+            .booking-header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .professionals-grid { grid-template-columns: repeat(2, 1fr); } /* 2 colunas é melhor */
+            .times-grid { grid-template-columns: repeat(3, 1fr); } /* 3 colunas é melhor */
+            .calendar-grid { font-size: 0.75rem; }
+            .calendar-date { padding: 0.4rem 0; }
+        }
+    </style>
+</head>
+<body class="light-theme"> <div class="booking-container">
+        <header class="booking-header">
+            <div class="container">
+                <div class="booking-header-content">
+                    <div class="logo">YI<span>VRA</span></div>
+                    <div class="text-secondary">
+                        <i class="fas fa-map-marker-alt"></i> Av. Paulista, 123
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="booking-main">
+            <div class="container">
+                <div class="booking-card">
+                    <div class="booking-progress">
+                        <div class="progress-step active" data-step="1"></div>
+                        <div class="progress-step" data-step="2"></div>
+                        <div class="progress-step" data-step="3"></div>
+                        <div class="progress-step" data-step="4"></div>
+                        <div class="progress-step" data-step="5"></div>
+                    </div>
+
+                    <div class="booking-content">
+                        <div class="error-message" id="errorMessage"></div>
+
+                        <div class="step active" id="step1">
+                            <h2 class="step-title">Escolha o Serviço</h2>
+                            <p class="step-subtitle">Selecione o que deseja agendar</p>
+                            
+                            <div class="services-grid">
+                                <div class="service-card" data-service="corte" data-price="40">
+                                    <div class="service-name">Corte de Cabelo</div>
+                                    <div class="service-details">R$ 40,00 • 30 minutos</div>
+                                </div>
+                                <div class="service-card" data-service="barba" data-price="30">
+                                    <div class="service-name">Barba</div>
+                                    <div class="service-details">R$ 30,00 • 30 minutos</div>
+                                </div>
+                                <div class="service-card selected" data-service="combo" data-price="65">
+                                    <div class="service-name">Corte + Barba</div>
+                                    <div class="service-details">R$ 65,00 • 60 minutos</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step" id="step2">
+                            <h2 class="step-title">Escolha o Profissional</h2>
+                            <p class="step-subtitle">Quem vai te atender?</p>
+                            
+                            <div class="professionals-grid">
+                                <div class="professional-card" data-professional="qualquer">
+                                    <div class="professional-avatar">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <div class="professional-name">Qualquer</div>
+                                </div>
+                                <div class="professional-card selected" data-professional="vitor">
+                                    <div class="professional-avatar">V</div>
+                                    <div class="professional-name">Vítor</div>
+                                </div>
+                                <div class="professional-card" data-professional="bruno">
+                                    <div class="professional-avatar">B</div>
+                                    <div class="professional-name">Bruno</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step" id="step3">
+                            <h2 class="step-title">Escolha a Data</h2>
+                            <p class="step-subtitle">Selecione um dia disponível</p>
+                            
+                            <div class="calendar-container">
+                                <div class="calendar-header">
+                                    <button class="calendar-nav" id="prevMonth">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <div class="calendar-month" id="currentMonth">Novembro 2024</div>
+                                    <button class="calendar-nav" id="nextMonth">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="calendar-grid" id="calendarDays">
+                                    <div class="calendar-day">Dom</div>
+                                    <div class="calendar-day">Seg</div>
+                                    <div class="calendar-day">Ter</div>
+                                    <div class="calendar-day">Qua</div>
+                                    <div class="calendar-day">Qui</div>
+                                    <div class="calendar-day">Sex</div>
+                                    <div class="calendar-day">Sáb</div>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="step" id="step4">
+                            <h2 class="step-title">Escolha o Horário</h2>
+                            <p class="step-subtitle" id="selectedDateText">Selecione uma data primeiro</p>
+                            
+                            <div class="times-container">
+                                <div class="times-grid" id="timesGrid">
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="step" id="step5">
+                            <h2 class="step-title">Seus Dados</h2>
+                            <p class="step-subtitle">Para finalizar seu agendamento</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="clientName">
+                                    <i class="fas fa-user"></i> Seu Nome
+                                </label>
+                                <input type="text" id="clientName" class="form-input" placeholder="Digite seu nome completo">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="clientWhatsApp">
+                                    <i class="fas fa-phone"></i> WhatsApp
+                                </label>
+                                <input type="tel" id="clientWhatsApp" class="form-input" placeholder="(11) 99999-9999">
+                            </div>
+                        </div>
+
+                        <div class="step" id="step6">
+                            <div class="success-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h2 class="step-title">Agendamento Confirmado!</h2>
+                            <p class="step-subtitle">Você receberá um lembrete por WhatsApp</p>
+                            
+                            <div class="confirmation-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Serviço:</span>
+                                    <span class="detail-value" id="confirmService">Corte + Barba</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Profissional:</span>
+                                    <span class="detail-value" id="confirmProfessional">Vítor</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Data e Hora:</span>
+                                    <span class="detail-value" id="confirmDateTime">11/11/2024 às 10:30</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Valor:</span>
+                                    <span class="detail-value" id="confirmPrice">R$ 65,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking-footer">
+                        <button class="btn btn-secondary btn-full" id="btnBack" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                        <button class="btn btn-primary btn-full" id="btnNext">
+                            Continuar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Estado do agendamento
+        const bookingState = {
+            currentStep: 1,
+            service: 'combo',
+            price: 65,
+            professional: 'vitor',
+            date: null,
+            time: null,
+            clientName: '',
+            clientWhatsApp: ''
+        };
+
+        // Elementos da UI
+        const steps = document.querySelectorAll('.step');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const btnNext = document.getElementById('btnNext');
+        const btnBack = document.getElementById('btnBack');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCalendar();
+            setupEventListeners();
+            updateStepView(true); // Inicia a visualização
+        });
+
+        function setupEventListeners() {
+            // Serviços
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    bookingState.service = this.dataset.service;
+                    bookingState.price = parseInt(this.dataset.price);
+                });
+            });
+
+            // Profissionais
+            document.querySelectorAll('.professional-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.professional-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    bookingState.professional = this.dataset.professional;
+                });
+            });
+
+            // Navegação
+            btnNext.addEventListener('click', nextStep);
+            btnBack.addEventListener('click', prevStep);
+
+            // Navegação do calendário
+            document.getElementById('prevMonth').addEventListener('click', prevMonth);
+            document.getElementById('nextMonth').addEventListener('click', nextMonth);
+        }
+        
+        // ======================================
+        // MELHORIA: Barra de Erro
+        // ======================================
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('active');
+            
+            // Oculta a mensagem após 3 segundos
+            setTimeout(() => {
+                errorMessage.classList.remove('active');
+            }, 3000);
+        }
+
+        function clearError() {
+            errorMessage.classList.remove('active');
+        }
+
+        // ======================================
+        // NAVEGAÇÃO ENTRE ETAPAS
+        // ======================================
+        
+        function navigateToStep(targetStep) {
+            clearError();
+            
+            // Esconde a etapa atual
+            steps[bookingState.currentStep - 1].classList.remove('active');
+            
+            // Define a nova etapa
+            bookingState.currentStep = targetStep;
+            
+            // Mostra a nova etapa
+            steps[bookingState.currentStep - 1].classList.add('active');
+            
+            updateProgressIndicator();
+            updateNavigationButtons();
+            
+            // Ações específicas por etapa
+            if (bookingState.currentStep === 4 && bookingState.date) {
+                updateTimeSlots();
+            }
+            if (bookingState.currentStep === 6) {
+                updateConfirmationDetails();
+            }
+        }
+        
+        function nextStep() {
+            // Validações antes de avançar
+            if (bookingState.currentStep === 1 && !bookingState.service) {
+                return showError('Por favor, selecione um serviço.');
+            }
+            if (bookingState.currentStep === 2 && !bookingState.professional) {
+                return showError('Por favor, selecione um profissional.');
+            }
+            if (bookingState.currentStep === 3 && !bookingState.date) {
+                return showError('Por favor, selecione uma data.');
+            }
+            if (bookingState.currentStep === 4 && !bookingState.time) {
+                return showError('Por favor, selecione um horário.');
+            }
+            if (bookingState.currentStep === 5) {
+                const name = document.getElementById('clientName').value.trim();
+                const whatsapp = document.getElementById('clientWhatsApp').value.trim();
+                
+                if (!name || !whatsapp) {
+                    return showError('Por favor, preencha nome e WhatsApp.');
+                }
+                bookingState.clientName = name;
+                bookingState.clientWhatsApp = whatsapp;
+            }
+
+            if (bookingState.currentStep < 6) {
+                navigateToStep(bookingState.currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (bookingState.currentStep > 1) {
+                navigateToStep(bookingState.currentStep - 1);
+            }
+        }
+        
+        // Função inicial para mostrar a primeira etapa (evita piscar)
+        function updateStepView(isInitial = false) {
+            steps.forEach((step, index) => {
+                if ((index + 1) === bookingState.currentStep) {
+                    step.classList.add('active');
+                    // Não aplica animação na carga inicial
+                    if(isInitial) {
+                         step.style.animation = 'none';
+                    }
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            updateProgressIndicator();
+            updateNavigationButtons();
+        }
+
+        function updateProgressIndicator() {
+            progressSteps.forEach((step, index) => {
+                if (index < bookingState.currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        function updateNavigationButtons() {
+            // Se for a última etapa (Confirmação)
+            if (bookingState.currentStep === 6) {
+                btnBack.style.display = 'none';
+                btnNext.style.display = 'none';
+                return; // Encerra a função aqui
+            }
+
+            // Lógica para as etapas 1-5
+            // Botão Voltar
+            if (bookingState.currentStep > 1) { // Só não mostra na etapa 1
+                btnBack.style.display = 'block';
+            } else {
+                btnBack.style.display = 'none';
+            }
+
+            // Botão Avançar
+            if (bookingState.currentStep === 5) {
+                btnNext.innerHTML = 'Confirmar Agendamento <i class="fas fa-calendar-check"></i>';
+                btnNext.onclick = nextStep;
+            } else {
+                btnNext.innerHTML = 'Continuar <i class="fas fa-arrow-right"></i>';
+                btnNext.onclick = nextStep;
+            }
+        }
+
+        // ======================================
+        // LÓGICA DO CALENDÁRIO E HORÁRIOS
+        // ======================================
+        let currentDate = new Date();
+        
+        function initializeCalendar() {
+            updateCalendar();
+        }
+
+        function updateCalendar() {
+            const monthYear = document.getElementById('currentMonth');
+            const calendarDays = document.getElementById('calendarDays');
+            
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            monthYear.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            while (calendarDays.children.length > 7) {
+                calendarDays.removeChild(calendarDays.lastChild);
+            }
+            
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            const prevLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+            const firstDayIndex = firstDay.getDay();
+            const nextDays = (7 - lastDay.getDay() - 1 + 7) % 7; // Corrige cálculo
+            
+            // Dias do mês anterior
+            for (let i = firstDayIndex; i > 0; i--) {
+                const dateElement = document.createElement('div');
+                dateElement.className = 'calendar-date unavailable';
+                dateElement.textContent = prevLastDay - i + 1;
+                calendarDays.appendChild(dateElement);
+            }
+            
+            // Dias do mês atual
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Zera a hora para comparação
+            
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const dateElement = document.createElement('div');
+                const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+                
+                // MOCK: Indisponível aos domingos (0) e segundas (1)
+                const isWorkDay = cellDate.getDay() !== 0 && cellDate.getDay() !== 1;
+                const isPast = cellDate < today;
+                const isAvailable = isWorkDay && !isPast;
+                
+                dateElement.className = `calendar-date ${isAvailable ? 'available' : 'unavailable'}`;
+                dateElement.textContent = i;
+                
+                if (isAvailable) {
+                    dateElement.addEventListener('click', function() {
+                        document.querySelectorAll('.calendar-date').forEach(date => {
+                            date.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                        
+                        bookingState.date = cellDate;
+                        bookingState.time = null; // Reseta o horário ao trocar de data
+                        updateTimeSlots();
+                    });
+                }
+                
+                calendarDays.appendChild(dateElement);
+            }
+            
+            // Dias do próximo mês
+            for (let i = 1; i <= nextDays; i++) {
+                const dateElement = document.createElement('div');
+                dateElement.className = 'calendar-date unavailable';
+                dateElement.textContent = i;
+                calendarDays.appendChild(dateElement);
+            }
+        }
+
+        function prevMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        }
+
+        function updateTimeSlots() {
+            const selectedDateText = document.getElementById('selectedDateText');
+            const timesGrid = document.getElementById('timesGrid');
+            
+            if (bookingState.date) {
+                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                selectedDateText.textContent = `Horários para ${bookingState.date.toLocaleDateString('pt-BR', options)}`;
+            } else {
+                selectedDateText.textContent = 'Selecione uma data primeiro';
+                timesGrid.innerHTML = '';
+                return;
+            }
+            
+            timesGrid.innerHTML = '';
+            
+            // MOCK de horários
+            const baseTimes = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'];
+            
+            baseTimes.forEach(time => {
+                const timeSlot = document.createElement('div');
+                
+                // MOCK: Torna alguns horários aleatórios indisponíveis
+                const isUnavailable = Math.random() > 0.7; // 30% de chance de estar ocupado
+                
+                timeSlot.className = `time-slot ${isUnavailable ? 'unavailable' : 'available'}`;
+                timeSlot.textContent = time;
+                
+                if (!isUnavailable) {
+                    timeSlot.addEventListener('click', function() {
+                        document.querySelectorAll('.time-slot.selected').forEach(slot => {
+                            slot.classList.remove('selected');
+                        });
+                        this.classList.add('selected');
+                        bookingState.time = time;
+                    });
+                }
+                
+                timesGrid.appendChild(timeSlot);
+            });
+        }
+
+        function updateConfirmationDetails() {
+            // Busca o texto do card de serviço selecionado
+            const serviceCard = document.querySelector('.service-card.selected');
+            document.getElementById('confirmService').textContent = serviceCard.querySelector('.service-name').textContent;
+            
+            // Busca o texto do card de profissional selecionado
+            const profCard = document.querySelector('.professional-card.selected');
+            document.getElementById('confirmProfessional').textContent = profCard.querySelector('.professional-name').textContent;
+            
+            document.getElementById('confirmDateTime').textContent =
+                `${bookingState.date.toLocaleDateString('pt-BR')} às ${bookingState.time}`;
+                
+            document.getElementById('confirmPrice').textContent = 
+                `R$ ${bookingState.price.toFixed(2).replace('.', ',')}`;
+        }
+    </script>
+</body>
+</html>
