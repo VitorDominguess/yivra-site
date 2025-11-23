@@ -279,32 +279,38 @@
                 <p>Cadastre-se na lista de espera e, como agradecimento, você ganhará <strong>30 dias de teste grátis</strong> (ao invés dos 7 dias padrão) assim que sua vaga for liberada.</p>
             </div>
 
-            <form id="beta-form">
-                <div class="form-group">
-                    <label for="beta-email">Seu melhor e-mail</label>
-                    <input type="email" id="beta-email" class="input-field" placeholder="seu.email@exemplo.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="beta-business">Nome do seu negócio (Opcional)</label>
-                    <input type="text" id="beta-business" class="input-field" placeholder="Ex: Barbearia do Vítor">
-                </div>
-                
-                <div class="form-group">
-                    <label for="beta-pain">Qual sua maior dor com agendamentos hoje?</label>
-                    <select id="beta-pain" class="input-field">
-                        <option value="" disabled selected>Selecione seu maior problema...</option>
-                        <option value="tempo_whatsapp">Perco muito tempo respondendo clientes</option>
-                        <option value="no_show">Clientes que faltam (no-show)</option>
-                        <option value="organizacao">Organizar a agenda de vários profissionais</option>
-                        <option value="financeiro">Controle de comissões e pagamentos</option>
-                        <option value="outro">Outro (será perguntado depois)</option>
-                    </select>
-                </div>
+            <form id="beta-form" action="https://api.web3forms.com/submit" method="POST">
+    <input type="hidden" name="access_key" value="ce0f58cc-4522-4146-8ae1-e9ff720b0242">
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-                    Quero meus 30 dias grátis!
-                </button>
-            </form>
+    <div class="form-group">
+        <label for="beta-email">Seu melhor e-mail</label>
+        <input type="email" id="beta-email" name="email" class="input-field" required>
+    </div>
+
+    <div class="form-group">
+        <label for="beta-business">Nome do seu negócio (Opcional)</label>
+        <input type="text" id="beta-business" name="business" class="input-field">
+    </div>
+
+    <div class="form-group">
+        <label for="beta-pain">Qual sua maior dor com agendamentos hoje?</label>
+        <select id="beta-pain" name="pain" class="input-field" required>
+            <option value="" disabled selected>Selecione...</option>
+            <option value="tempo_whatsapp">Perco muito tempo no WhatsApp</option>
+            <option value="no_show">Clientes faltam</option>
+            <option value="organizacao">Organizar vários profissionais</option>
+            <option value="financeiro">Financeiro</option>
+            <option value="outro">Outro</option>
+        </select>
+    </div>
+
+    <input type="hidden" name="redirect" value="https://seudominio.com/sucesso.html">
+
+    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+        Quero meus 30 dias grátis!
+    </button>
+</form>
+
         </div>
     </div>
     

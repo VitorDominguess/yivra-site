@@ -101,11 +101,25 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// 6. Lógica do Formulário (Simulação)
 const betaForm = document.getElementById('beta-form');
-betaForm.addEventListener('submit', function(event) {
+
+betaForm.addEventListener('submit', async function(event) {
     event.preventDefault();
-    
-    // Mostra um agradecimento
-    betaForm.innerHTML = '<div class="success-screen" style="padding: 1rem 0;"><div class="success-icon" style="width: 60px; height: 60px; font-size: 1.5rem;"><i class="fas fa-check"></i></div><h4 class="mt-4">Inscrição recebida!</h4><p class="text-secondary">Obrigado! Você é o próximo da fila e será avisado por e-mail.</p></div>';
+
+    const formData = new FormData(betaForm);
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+    });
+
+    if (response.ok) {
+        betaModal.querySelector('.modal-content').innerHTML =
+        '<div class="success-screen" style="padding:1rem 0;">' +
+        '<div class="success-icon" style="width:60px;height:60px;font-size:1.5rem;">' +
+        '<i class="fas fa-check"></i></div>' +
+        '<h4 class="mt-4">Inscrição recebida!</h4>' +
+        '<p class="text-secondary">Obrigado! Você será avisado por e-mail.</p>' +
+        '</div>';
+    }
 });
